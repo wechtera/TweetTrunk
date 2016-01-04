@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script>
+const dbName = "TweetTrunkDB";
+
+var tweetsDB;
+
+function initDB()
+{
+	// Check whether the DB has already been initialized.
+	if (tweetsDB)
+		return;
+
+	// Check for IndexedDB support.
+	if (!indexedDB) {
+		alert("No support for local databases. Try a newer browser.");
+		return;
+	}
+
+	var request = indexedDB.open(dbName, 1);
+
+	// Pass along database errors.
+	request.onerror = function(event) {
+		alert("Database error: " + event.target.errorCode);
+	};
+
+	// Handle database state initialization (or updating).
+	request.onupgradeneeded = function(event) {
+		tweetsDB = event.target.result;
+
+		var objectStore = db.createObjectStore("tweets", { keyPath: "id" });
+	};
+}
+</script>
+</head>
+
+<body>
+
+</body>
+
+</html>

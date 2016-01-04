@@ -1,0 +1,237 @@
+<?xml version="1.0"?>
+<JDepend>
+    <Packages>
+
+        <Package name="net.lingala.zip4j.core">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="net.lingala.zip4j.exception">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.json.simple">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.json.simple.parser">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.mcavallo.opencloud">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="org.tweettrunk.core">
+            <Stats>
+                <TotalClasses>3</TotalClasses>
+                <ConcreteClasses>3</ConcreteClasses>
+                <AbstractClasses>0</AbstractClasses>
+                <Ca>3</Ca>
+                <Ce>5</Ce>
+                <A>0</A>
+                <I>0.62</I>
+                <D>0.38</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="AccountManager.java">
+                    org.tweettrunk.core.AccountManager
+                </Class>
+                <Class sourceFile="TweetsAnalyzer.java">
+                    org.tweettrunk.core.TweetsAnalyzer
+                </Class>
+                <Class sourceFile="TweetsAnalyzer.java">
+                    org.tweettrunk.core.TweetsAnalyzer$1
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>org.mcavallo.opencloud</Package>
+                <Package>org.tweettrunk.util</Package>
+                <Package>twitter4j</Package>
+                <Package>twitter4j.auth</Package>
+                <Package>twitter4j.conf</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>org.tweettrunk.test</Package>
+                <Package>org.tweettrunk.ui</Package>
+                <Package>org.tweettrunk.util</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="org.tweettrunk.test">
+            <Stats>
+                <TotalClasses>8</TotalClasses>
+                <ConcreteClasses>8</ConcreteClasses>
+                <AbstractClasses>0</AbstractClasses>
+                <Ca>0</Ca>
+                <Ce>3</Ce>
+                <A>0</A>
+                <I>1</I>
+                <D>0</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="AccountManagerTests.java">
+                    org.tweettrunk.test.AccountManagerTests
+                </Class>
+                <Class sourceFile="AllTests.java">
+                    org.tweettrunk.test.AllTests
+                </Class>
+                <Class sourceFile="ArchiveManagerTests.java">
+                    org.tweettrunk.test.ArchiveManagerTests
+                </Class>
+                <Class sourceFile="DBManagerTest.java">
+                    org.tweettrunk.test.DBManagerTest
+                </Class>
+                <Class sourceFile="ParametersTests.java">
+                    org.tweettrunk.test.ParametersTests
+                </Class>
+                <Class sourceFile="TweetTests.java">
+                    org.tweettrunk.test.TweetTests
+                </Class>
+                <Class sourceFile="TweetTrunkCLITests.java">
+                    org.tweettrunk.test.TweetTrunkCLITests
+                </Class>
+                <Class sourceFile="TweetsAnalyzerTests.java">
+                    org.tweettrunk.test.TweetsAnalyzerTests
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>org.tweettrunk.core</Package>
+                <Package>org.tweettrunk.ui</Package>
+                <Package>org.tweettrunk.util</Package>
+            </DependsUpon>
+
+            <UsedBy>
+            </UsedBy>
+        </Package>
+
+        <Package name="org.tweettrunk.ui">
+            <Stats>
+                <TotalClasses>2</TotalClasses>
+                <ConcreteClasses>2</ConcreteClasses>
+                <AbstractClasses>0</AbstractClasses>
+                <Ca>1</Ca>
+                <Ce>3</Ce>
+                <A>0</A>
+                <I>0.75</I>
+                <D>0.25</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="Parameters.java">
+                    org.tweettrunk.ui.Parameters
+                </Class>
+                <Class sourceFile="TweetTrunkCLI.java">
+                    org.tweettrunk.ui.TweetTrunkCLI
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>net.lingala.zip4j.exception</Package>
+                <Package>org.tweettrunk.core</Package>
+                <Package>org.tweettrunk.util</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>org.tweettrunk.test</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="org.tweettrunk.util">
+            <Stats>
+                <TotalClasses>3</TotalClasses>
+                <ConcreteClasses>3</ConcreteClasses>
+                <AbstractClasses>0</AbstractClasses>
+                <Ca>3</Ca>
+                <Ce>5</Ce>
+                <A>0</A>
+                <I>0.62</I>
+                <D>0.38</D>
+                <V>1</V>
+            </Stats>
+
+            <AbstractClasses>
+            </AbstractClasses>
+
+            <ConcreteClasses>
+                <Class sourceFile="ArchiveManager.java">
+                    org.tweettrunk.util.ArchiveManager
+                </Class>
+                <Class sourceFile="DBManager.java">
+                    org.tweettrunk.util.DBManager
+                </Class>
+                <Class sourceFile="Tweet.java">
+                    org.tweettrunk.util.Tweet
+                </Class>
+            </ConcreteClasses>
+
+            <DependsUpon>
+                <Package>net.lingala.zip4j.core</Package>
+                <Package>net.lingala.zip4j.exception</Package>
+                <Package>org.json.simple</Package>
+                <Package>org.json.simple.parser</Package>
+                <Package>org.tweettrunk.core</Package>
+            </DependsUpon>
+
+            <UsedBy>
+                <Package>org.tweettrunk.core</Package>
+                <Package>org.tweettrunk.test</Package>
+                <Package>org.tweettrunk.ui</Package>
+            </UsedBy>
+        </Package>
+
+        <Package name="twitter4j">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="twitter4j.auth">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+
+        <Package name="twitter4j.conf">
+            <error>No stats available: package referenced, but not analyzed.</error>
+        </Package>
+    </Packages>
+
+    <Cycles>
+        <Package Name="org.tweettrunk.core">
+            <Package>org.tweettrunk.util</Package>
+            <Package>org.tweettrunk.core</Package>
+        </Package>
+
+        <Package Name="org.tweettrunk.test">
+            <Package>org.tweettrunk.core</Package>
+            <Package>org.tweettrunk.util</Package>
+            <Package>org.tweettrunk.core</Package>
+        </Package>
+
+        <Package Name="org.tweettrunk.ui">
+            <Package>org.tweettrunk.core</Package>
+            <Package>org.tweettrunk.util</Package>
+            <Package>org.tweettrunk.core</Package>
+        </Package>
+
+        <Package Name="org.tweettrunk.util">
+            <Package>org.tweettrunk.core</Package>
+            <Package>org.tweettrunk.util</Package>
+        </Package>
+
+    </Cycles>
+</JDepend>

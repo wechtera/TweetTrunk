@@ -1,0 +1,188 @@
+<project xmlns:jacoco="antlib:org.jacoco.ant">
+
+	<!-- SETUP VARIABLES AND PATHS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<property name="" value="" />
+
+	<property name="lib.dir" value="lib" />
+	<property name="jar.dir" value="jar" />
+	<property name="src.dir" location="src/" />
+	<property name="build.dir" location="bin/" />
+	<property name="dist.dir" location="dist/" />
+	<property name="doc.dir" location="doc/" />
+	<property name="dist.name" value="TweetTrunk" />
+	<property name="config.logging.dir" value="config/logging" />
+	<property name="config.dir" value="config" />
+	<property name="version" value="1.0" />
+
+	<!-- Load the log4j properties -->
+	<loadproperties>
+		<file file="config/logging/log4j.properties" />
+	</loadproperties>
+
+	<!-- The standard classpath for building the system -->
+	<path id="build.classpath">
+		<fileset dir="${lib.dir}" includes="*.jar" />
+	</path>
+
+	<!-- The classpath for running the system -->
+	<path id="run.classpath">
+		<pathelement path="${build.dir}"/>
+		<fileset dir="${lib.dir}" includes="*.jar"/>
+	</path>
+
+	<!--The classpath for running a task and including the log4j properties-->
+	<path id="run.classpath.logging">
+		<pathelement path="${build.dir}"/>
+		<file file="${config.logging.dir}" />
+		<fileset dir="${lib.dir}" includes="*.jar"/>
+	</path>
+
+	<property name="result.dir" location="./bin" />
+	<property name="result.classes.dir" location="${result.dir}/" />
+	<property name="result.report.dir" location="${result.dir}/site/jacoco" />
+	<property name="result.exec.file" location="${result.dir}/jacoco.exec" />
+
+	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+		<classpath path="${lib.dir}/jacocoant.jar"/>
+	</taskdef>
+
+	<taskdef name="javancss" classname="javancss.JavancssAntTask" classpath="lib/javancss.jar:lib/jhbasic.jar:lib/ccl.jar"/>
+
+	<!-- BASIC TARGETS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+	<!-- CLEANING TASK - "ant clean" -->
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+		<delete dir="${dist.dir}"/>
+		<delete dir="${result.dir}"/>
+		<delete dir="${doc.dir}"/>
+		<delete dir="${jar.dir}"/>
+	</target>
+
+	<!-- COMPILING TASK - "ant compile" -->  
+	<target name="compile">
+		<mkdir dir="${build.dir}"/>
+		<javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false" debug="true" debuglevel="vars,lines,source">
+			<classpath refid="build.classpath"/>
+			<compilerarg value="-Xlint:unchecked"/> 
+			<compilerarg value="-Xlint:deprecation"/> 
+		</javac>
+	</target>
+
+	<!-- RUNNING TARGETS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+	<!--RUNNING TASK - "ant run" -->
+	<target name="run" depends="TweetTrunk" />
+
+	<target name="TweetTrunk">
+		<java fork="true" classname="org.tweettrunk.ui.TweetTrunkCLI">
+			<classpath refid="run.classpath" />
+			<arg line="${args}" />
+		</java>
+	</target>
+
+	<!-- RUNNING TASK - "ant test" -->
+	<target name="test" depends="compile">
+		<junit fork="yes">
+			<test name="org.tweettrunk.test.AllTests" />
+			<classpath refid="run.classpath.logging" />
+			<formatter type="brief" usefile="false" />
+		</junit>
+	</target>
+
+	<!-- RUNNING TASK - "ant coveragetest" -->
+	<target name="coveragetest" depends="compile">
+		<jacoco:coverage destfile="${result.exec.file}">
+			<junit fork="yes" forkmode="once">
+				<test name="org.tweettrunk.test.AllTests" />
+				<classpath refid="run.classpath" />
+				<formatter type="brief" usefile="false" />
+			</junit>
+		</jacoco:coverage>
+	</target>
+
+	<!-- RUNNING TASK - "ant coverage" -->
+	<target name="coverage" depends="coveragetest">
+		<jacoco:report>
+			<executiondata>
+				<file file="${result.exec.file}" />
+			</executiondata>
+
+			<structure name="TweetTrunk Coverage Report">
+				<classfiles>
+					<fileset dir="${result.classes.dir}">
+						<exclude name="org/tweettrunk/ui/TweetTrunkCLI.class" />
+						<exclude name="org/tweettrunk/core/AccountManager.class" />
+
+					</fileset>
+				</classfiles>
+				<sourcefiles encoding="UTF-8">
+					<fileset dir="${src.dir}" />
+				</sourcefiles>
+			</structure>
+
+			<html destdir="${result.report.dir}/TweetTrunk/" />
+			<csv destfile="${result.report.dir}/TweetTrunk/report.csv" />
+			<xml destfile="${result.report.dir}/TweetTrunk/report.xml" />
+		</jacoco:report>
+	</target>
+
+
+
+	<!--PRODUCT QUALITY ANALYSIS TASKS -->
+	<!--PRODUCT QUALITY ANALYSIS TASK - "ant javancss" -->
+	<target name="javancss">
+		<mkdir dir="${doc.dir}"/>
+		<!-- generate a report and assert that the CCN <= 10 for each file -->
+		<javancss srcdir="${src.dir}"  includes="**/*.java" generateReport="yes"
+				outputfile="${doc.dir}/javancss-report.xml"
+				format="xml" ccnPerFuncMax="10" abortOnFail="false" />
+		<!-- convert the XML output to an HTML report -->
+		<xslt basedir="${doc.dir}" destdir="${doc.dir}" includes="javancss-report.xml" 
+				style="${user.home}/.ant/etc/javancss2html.xsl" />
+	</target>
+
+	<!--PRODUCT QUALITY ANALYSIS TASK - "ant jdepend" -->
+	<target name="jdepend" depends="compile">
+		<mkdir dir="${doc.dir}"/>
+		<jdepend outputfile="${doc.dir}/jdepend-report.xml" format="xml">
+			<exclude name="java.*"/>
+			<exclude name="javax.*"/>
+			<exclude name="org.junit"/>
+			<exclude name="org.junit.*"/>
+			<exclude name="com.beust.jcommander"/>
+			<exclude name="au.com.bytecode.opencsv"/>
+			<classespath>
+				<pathelement location="${build.dir}" />
+			</classespath>
+		</jdepend>
+		<!-- generate an HTML version of the report -->
+		<xslt basedir="${doc.dir}" destdir="${doc.dir}" includes="jdepend-report.xml" 
+				style="${user.home}/.ant/etc/jdepend.xsl" />
+	</target>
+
+
+	<!-- GENERATE JAVADOC -->
+	<target name="javadoc">
+		<javadoc packagenames="org.tweettrunk.*" sourcepath="${src.dir}" excludepackagenames="org.tweettrunk.test, org.mcavallo.opencloud, org.tweettrunk.ui, net.lingala.zip4j, org.json.simple" defaultexcludes="yes" destdir="${doc.dir}/javadoc/" author="true" version="true" use="true" windowtitle="TweetTrunk API">
+			<doctitle>TweetTrunk API</doctitle>
+			<bottom>Copyright &#169; 2013 Kara King, Nathaniel Blake, Eric Weyant, Adam Wechter, Erich Harkema. All Rights Reserved.</bottom>
+			<link offline="true" href="http://docs.oracle.com/javase/7/docs/api/" packagelistLoc="C:\tmp"/>
+			<link href="http://docs.oracle.com/javase/7/docs/api/"/>
+		</javadoc>
+	</target>
+
+
+	<!-- Generate .jar file -->
+	<target name="jar" depends="compile">
+		<mkdir dir="${jar.dir}"/>
+		<jar destfile="${jar.dir}/${dist.name}.jar" basedir="${build.dir}">
+			<zipgroupfileset dir="${lib.dir}" includes="json-simple-*.jar,opencloud.jar,zip4j_*.jar,sqlite-jdbc-*.jar,jcommander-*.jar,twitter4j-core-*.jar" />
+			<manifest>
+				<attribute name="Main-Class" value="org.tweettrunk.ui.TweetTrunkCLI"/>
+			</manifest>
+		</jar>
+	</target>
+
+
+</project>

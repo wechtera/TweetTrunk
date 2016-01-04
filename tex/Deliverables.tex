@@ -1,0 +1,85 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage{changepage, titlesec, hyperref, fullpage}
+\usepackage{graphicx}
+
+\title{Deliverables Document}
+\author{Kara King\and Nathaniel Blake\and Eric Weyant\and Adam Wechter \and Erich Harkema}
+\begin{document}
+\maketitle
+
+\subsection*{Deliverable 1} \label{sec:one}
+\textit{} When completing our project we used an agile style of development. We worked together first designing the requirements and design documents to ensure that we all had a grasp on the overall design of the product before beginning coding. When we began coding we tried to distribute the coding up via the packages. However, we each bounced back and forth depending on where we needed more work to be done in that specific moment. Adam worked in the Util package ensuring that the database was set up and could be accessed efficiently. He also worked in the core package coding the analytic tools. Eric worked in the UI package and got the command line interface working. He also worked inside Util package in order to extract zip files as well as JSON parsing. Nathaniel also worked in the Util package to coordinate the user’s interaction with Twitter and also worked with zip extraction and JSON parsing. Kara focused on the Test package and ensured that the project was adequately covered. 
+
+\subsubsection*{Eric Weyant}
+\begin{itemize}
+\item  Created command line interface
+\item  Worked with zip4j for zip extraction
+\item  Worked with JSON-simple for JSON parsing
+\item  Created logo
+\item  Worked with Graphviz to create activity graph and architecture design
+\end{itemize}
+
+\subsubsection*{Nathaniel Blake}
+\begin{itemize}
+\item Worked with Twitter4j for interaction with Twitter
+\item Worked with JSON-simple for JSON parsing
+\item Overall Debugging
+\item \texttt{ArchiveManager} class
+\item \texttt{AccountManager} class
+\item Two analytics in \texttt{TweetsAnalyzer} class
+\item \texttt{Parameters.java} and help with \texttt{TweetTrunkCLI}
+\item \texttt{javancss}, \texttt{jdepend}, and \texttt{jar} build targets
+\end{itemize}
+
+\subsubsection*{Kara King}
+\begin{itemize}
+\item Created most tests
+\item Helped with Twitter4j interaction
+\item Wrote Design document
+\item Wrote Architecture document
+\item Product Manager (team mom)
+\end{itemize}
+
+\subsubsection*{Adam Wechter}
+\begin{itemize}
+\item Database testing
+\item \texttt{Tweet} class
+\item \texttt{DBManager} class
+\item \texttt{TweetsAnalyzer} class
+\item System design/architect
+\end{itemize}
+
+\subsubsection*{Adam Wechter}
+\begin{itemize}
+\item Showed up for first meeting
+\end{itemize}
+
+\subsection*{Tools}
+\begin{itemize}
+\item \texttt{Graphviz:} Graphviz was used to complete an architecture design graph as well as an activity graph.
+\item \texttt{Eclim:} Eclim was used to turn Vim into a full fledged integrated development environment. Specifically we used features such as ProjectCreate, JavaImport, and JavaDocComment.
+\item \texttt{Junit:} Junit was used for testing each of our classes in the project.
+\item \texttt{JaCoCo:} JaCoCo was used in conjunction with Ant in order to run our test suite and produce coverage reports.
+\item \texttt{LaTeX(Texmaker):} Texmaker was used to compile LaTeX code for the Requirements and Design documents.
+\item \texttt{BitBucket:} Bitbucket was used via Git commands so we were able to maintain version control throughout the lab. 
+\item \texttt{JDepend:} JDepend was used to automatically calculate design quality metrics for our project.
+\item \texttt{JavaNCSS:} JavaNCSS was used in order to break down our project to find the cyclomatic complexity, the number of classes and functions, NCSS, and the number of Javadoc comments. 
+\item \texttt{Ant:} Ant is used with our group’s build.xml file to run our entire project alongside in conjunction with other tools such as JavaNCSS and JDepend.
+\item \texttt{Open Cloud:} Open Cloud was used in order to help create a hashtag tag cloud.
+\item \texttt{SQLite3:} SQLite3 is a light-weight relational data base manager which we used to manage our tweets database.
+\item \texttt{Zip4j:} Zip4j was used in order to extract the tweet archive.
+\item \texttt{JSON-simple:} JSON-simple was used to help parse JSON files.
+\end{itemize}
+
+\subsection*{Deliverable 2} \label{sec:two}
+When the Twitter archive is initially downloaded, the user receives a .zip file named twitter which, when extracted to the desired location, shows to contain five directories, an index.html file, a README.txt file, and a csv containing tweets.  The README contains simple information about the contents of the archive and a small amount of information about use of the JSON file for developers.  The index.html file, when used, will take the user to a html formatted index of all the different tweets in the archive.  Next is the contents of the 5 directories supplied by the archive.  Four of these folders, the css director, img directory, js directory, and lib directory are merely there to set up and assist the creation of the html page created by index.html, however the final directory is the most important one to developers which is the data directory.  Within the data folder, there are three simple JSON files containing information on the tweets and information about the receipt and structure of the archive file.  One of these we found important to use in order to verify that the archive belonged to the authenticator, which is crucial in the authentication process.  Additionally there is a Tweets directory which contains the JSON files of all of the tweets sent by the user. 
+
+\subsection*{Deliverable 3} \label{sec:three}
+There are two formats in which the tweets are held.  First, there is the CSV, or comma separated values, format which is slightly less in depth.  This file holds, in order, the tweet ID, the “in reply to ID”’s which is just a special stored ID’s used for replies, the timestamp associated with the tweet, an html source ref, the text, retweeted information like id and timestamp, and an expanded url.  We decided not to use this file since it had slightly less information than the JSON alternative.  The JSON file, or javascript object notation file, was contained in the data folder and had far more information but we only opted to parse and use things relevant to the analyzer.  From this file, we used the hashtags tag, the geographic location, the text of the tweet, and the creation date/time.
+\pagebreak
+\subsection*{Deliverable 5} \label{sec:five}
+\texttt{CREATE TABLE TWEETS (ID INTEGER PRIMARY KEY, HASHTAGS VARCHAR(180),GEO\_LOC VARCHAR(30),CONTENT VARCHAR(140),DATE\_TIME DATETIME);}
+\\
+The schema is a relatively simple database which uses information taken from the parsed JSON file and is stored in a hidden .tweettrunk directory off of the users home.  We use the tweet’s ID as our primary key since every tweet has a unique ID associated with it.  This means we will never run into a problem of a tweet having no ID or two tweets having the same ID numbers causing insertion conflicts.  Hashtags are stored as a simple comma separated string as well as the content.  Both are sized appropriately to have the maximum number of characters possible.  Since within the program, geographic locations are stored as a double array list, we convert them to a comma separated string for storage, and to become live objects, we re-transform them into the arrays again as doubles.  Finally, the tweet’s date/time are stored in the database as a DateTime type with the form of YYYY-MM-DD HH:MM:SS.  This allows us to easily make queries with dates as arguments. 
+
+\end{document}

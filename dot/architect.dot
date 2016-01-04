@@ -1,0 +1,35 @@
+graph Architect
+{
+
+	subgraph cluster1 
+	{
+		node [style=filled]
+		Analyzer -- "Account Manager"
+		label = "Core"
+		color=blue
+	}
+
+	subgraph cluster2
+	{
+		node [style=filled]
+		"Archive Manager" -- "Database Manager" -- "Tweet Class" 
+		label = "Util"
+		color=blue
+	}
+
+	subgraph cluster3 
+	{
+		node [style=filled]
+		CLI -- Parameters 
+		label = "UI"
+		color=blue
+	}
+
+	subgraph cluster4
+	{
+		node [style=filled]
+		AllTests -- ArchiveManagerTests -- DBManagerTest -- ParametersTest -- TweetAnalyzerTest -- TweetTest
+		label = "Test"
+		color=blue
+	}
+}

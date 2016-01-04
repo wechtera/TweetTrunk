@@ -1,0 +1,46 @@
+##############################
+# BINARIES
+##############################
+# Compiled Java bytecode files
+*.class
+# bin directories:
+bin/*
+doc/api/*
+# LaTeX compiled stuffs:
+tex/*.aux
+tex/*.log
+tex/*.out
+tex/*.pdf
+tex/*.synctex.gz
+tex/*.toc
+
+
+############################
+# OS-GENERATED GARBAGE FILES
+############################
+# OSX filesystem junk
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+# Windows filesystem junk (just in case)
+ehthumbs.db
+Thumbs.db
+
+###########################
+# EDITOR GARBAGE FILES
+###########################
+# Emacs backup files
+	*~
+# eclim worspace file
+workspace.xmi
+eclim/*
+# SublimeText workspace files
+	*.sublime-project
+	*.sublime-workspace
+
+# Large binary blobs of unknown origin
+	*.swo
+	*.swp
+

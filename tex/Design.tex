@@ -1,0 +1,104 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage{changepage, titlesec, hyperref, fullpage}
+\titleformat{\section}[block]{\bfseries}{\thesection.}{1em}{}
+\titleformat{\subsection}[block]{}{\thesubsection}{1em}{}
+\titlespacing*{\subsection} {2em}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\title{Design Document}
+\author{Kara King, Nathaniel Blake, Eric Weyant, Aam Wechter and Erich Harkema}
+\begin{document}
+\maketitle
+
+\begin{center}
+\centering  ``Design is not just what it looks like and feels like. Design is how it works." \newline
+\centering - Steve Jobs
+\end{center}
+
+\section{Introduction} \label{sec:intro}
+We are TreetTrunk and we have implemented a full fledged analysis of tweets downloaded from Twitter and stored those tweets into a SQLite database. 
+\section{Purpose of the Design of this Product} \label{sec:purpose}
+\begin{adjustwidth}{2em}{0pt}
+\textit{TweetTrunk} is a Twitter analysis tool. It performs multiple analyses on a Twitter users Tweets. Essentially, we had to design our system so the system was reliable and efficient. Hence, we put the database classes at the lowest level of our hierarchy since every other class relies on the database. Our main worker class is TweetTrunkCLI, which is at the top of the hierarchy. This class is used to interact with out user.  
+\end{adjustwidth}
+
+\tableofcontents
+
+
+\section{System Design} \label{sec:sysarch}
+\begin{adjustwidth}{2em}{0pt}
+\subsection{core} \label{sec:archd}
+\begin{adjustwidth}{2em}{0pt}
+The core module is used to package together all of the classes that deal with the actual analysis of tweet and authentication of the user to twitter.\newline
+
+
+\noindent  \textit{AccountManager.java}  \newline
+This class is one of the most important classes besides the database class because it checks to see if the user is authenticated to Twitter and whether or not they have new tweets available for analysis. The \texttt{tweetTrunkDirectory()} method gets the .tweettrunk directory in the user's home directory. Where as \texttt {accessTokensFileName()} returns the file name of the file that holds the accesstokens for twitter. The \texttt{archiveImportedMarkerFile()} method adds a marker to the users TweetTrunk directory if they have already imported an archive from Twitter. The method that creates the .tweettrunk directory in the user's home directory is \texttt{createTweetTrunkDirectory()}. The \newline\texttt{buildTwitterConfiguration()} method build a configuration for TwitterFactory. This includes stored access tokens if they're available; otherwise, it's a default configuration containing only consumer keys. The method that gets authentication for a Twitter user and stores the keys in the ~/.tweettrunk directory is\texttt{authenticateUser()}. \texttt{authenticatedScreenName()} is a method that gets the authenticated user's screen name. There is a method in this class that adds tweets from the users archive to the database, this method is \texttt{addTweetsFromArchive(String zipFilePath)}. There is a method called   \texttt{recursiveDelete(File file)} that recursively deletes a directory or file. This method is used to remove the archive extraction directory. Another method that is similar to this one is \texttt{newTweetsAvailable()} which checks to see if any new tweets from the users twitter account that are not yet in the database and then the \texttt{fetchNewTweets()} method fetches these tweets. One of the most crucial methods in this class is \texttt{userIsAuthenticated()}, which checks to see if the user is authenticated to twitter. The next method that is almost as important as the previous one is \texttt{hasImportedArchive()} which checks to see if the user has imported their archive or not. The last two methods deal with resetting the users account and deleting their account, these methods are \texttt{resetAccount()} and \texttt{deleteAccount()}. Over all, this class is used to authenticate the user to twitter and it also deals with fetching and storing new tweets. \newline\newline
+
+\noindent \textit{TweetsAnalyzer.java} \newline
+This class is the main class that does all the analysis for TreetTrunk. The first method, \texttt{subStringMatching(String dateStart, String dateEnd, String search)}* takes strings of starting and end dates, and a search string/substring, as parameters and queries the database for any tweets with the matching substring within the tweet text between the two specified dates.  It then returns the tweet information and prints the date the tweet was tweeted along with the text of the tweet containing the substring in the form of a String built for CLI formatting. The next method is \texttt{geoLocationAnalysis(String dateStart, String dateEnd)}. This method takes two strings of starting and end dates to query the database between.  It will then look at all of the tweets to see if the tweet has a geographic location assocaited with the tweet and if it does, it will format and return the final formatted string after all the tweets are examined.  The string is primed for CLI execution and return. There is a method called  \texttt{hashTagPieChart(String dateStart, String dateEnd)} that opens a window with clickable hashtags in the form of a word cloud. Then there is a method, \texttt{tweetsInDays(String dateStart, String dateEnd)}, that will get any tweets that the user has made between two dates and return them in a formatted string for CLI input and output.  If dates are switched or any improper  arguements are entered, the formatted string will inform the user of their error. \texttt{hourlyTweetRate()} outputs a list of the number of tweets by time of day. Finally,  \texttt{isValidParam(String dateStart, String dateEnd)}, which is a  method to check all user inputs such that they are in the correct order before the method makes calls to the database.  It tests specifically that the start date is before the end date in arguments. Done by a quick compare and is boolean in nature. Hence, all of these methods are simply used to analyze all of the tweets for each user of the system. \newline\newline
+
+
+\end{adjustwidth}
+
+\subsection{ui} \label{sec:archb}
+\begin{adjustwidth}{2em}{0pt}
+The ui module is used to package together all of the classes that deal with user interactions with TweetTrunk such as classes that deal with command line argumants and parsing Json files. \newline
+
+\noindent \textit{Parameters.java}  \newline
+This class is used to fetch all of the user command line arguments and store them in parameters. This class used JCommander. The \texttt{doAuthenticate()} method sees whether the user wants to authenticate to twitter and the the \texttt{doAddArchive()} methods checks to see if the user has imported a tweet archive. Then, there is a method called \texttt{getArchiveFilePath()} that simply gets the path to the users tweet archive they imported. Then the \texttt{getAnalysis()} method gets what analysis the user wants to perform. Then the user is allowed to enter a start data and end date in the command line for which they want their tweets analyzed. The methods that get and store these dates are \texttt{getStartDate()} and \texttt{getEndDate()}. Then, the user can enter a pattern that is used to get tweets only with that pattern in other classes. Hence, the method that stores that pattern is \texttt{getPattern()}. The final method is \texttt{doFetchNewTweets()} which stores whether the user wants to fetch new tweets and store them in the database. All in all, this class is used to be able to store all the variables that the user inputs via command line. \newline\newline
+	
+\noindent \textit{TweetTrunkCLI.java} \newline
+This class is the class that is used to interact with the user of TweetTrunk. The onyl method in this class is \texttt{main(String args[])}. This method checks to see if the user is authenticated and is they aren't then it prints out a usage for how to authenticate. If the user is authenticated than it checks to see what analysis they wanted to perform and then calls that analysis and performs it. This class also checks to see if the user has imported an archive or not. Hence, the main point of this class is to get what the user inputted via the command line and then takes those values and does the functions that are supposed to relate to those values.\newline\newline
+
+
+\end{adjustwidth}
+\subsection{util} \label{sec:archc}
+\begin{adjustwidth}{2em}{0pt}
+The util module is used to package together all of the classes that deal with the back end work of TweetTrunk such as database interactions.\newline
+ 
+\noindent  \textit{ArchiveManager.java}  \newline
+This class is used to work with Twitter archives described at https://blog.twitter.com/2012/your-twitter-archive. The first method is \texttt{userDetailsFilePath()} which gets the standard location of the user details file relative to the base of the extracted archive. Get the standard location of the user details file relative to the base of the extracted archive. The next method, which is \texttt{tweetsDirectoryPath()},  gets the standard location of the user details file relative to the base of the extracted archive. There is a method that unzips the Twitter archive to a specified directory and provides a list of all Tweet JSON files within. This method is \texttt{extractArchive(String archiveFilePath, String outputPath)}. The next method in succession is\newline \texttt{parseTweetsJSON(String filePath)}, which parses a Tweets JSON file in the format of those in data/js/tweets in a Twitter archive. The last method is\newline \texttt{parseUserDetails(String userDetailsFilePath)} which extracts the screen\_name property from the user\_details.js file as formatted in the Twitter archive. Hence, this class is used for getting details related to the users archive. \newline\newline
+
+
+\noindent \textit{DBManager.java} \newline
+This class handles all interactions with the database. The first method \newline \texttt {tweetsDBLocation()} returns the full path to the Tweets database. The next method is \texttt {reinitTable()}, which initializes the database and schema into the location given by AccountManager namely that of a hidden ".tweettrunk" directory off of the user's home directory with the schema of a primary ID integer, hashtag string, geolocation, in form of string, content in form of string, and a DateTime datetime.  This only happens if the database has not yet been created initially. The succeeding after that is \texttt {addTweets(ArrayList<Tweet> tweets)}, which is a method that   is the basic update or initial add of tweets to the table of tweets from  an arraylist recieved from the parser of a JSON file.  If entries already exist i.e. a previously entered tweet is trying to be read, the tweet is ignored and  the method moves on to the next one.  Boolean returns wether or not the entry worked or if errors happened within the insert. The next method \texttt {fetchTweets(String dateStart, String dateEnd, String searchTest)}, takes in two dates and a search string dictated by the user input or controlling method in the the core package.  It returns an array of tweet objects with all associated objects for the method it is passing it off to to handle and choose what it wants.  The substring is searched  for as as substring and things can be before or after for find to be valid. There is a method that returns a list of all tweets from the database. This method is \texttt {grabAll()}. Next, the method \texttt {fetchNewestTweet()}, fetches the newest Tweet that exists in the database. The \texttt {getHourlyCount(String hour)} method calculates the number of Tweets (from all time) that are posted within a span of a single hour of the day. This method  returns -1 as an error condition. The last method in this class is \texttt {dropTable()}. This method drops the table of tweets. The main use of this method is to clear between test during testing. Hence, all in all this class is used for the system to be able to access the database and add, take, and delete data from the database. \newline\newline
+
+\noindent  \textit{Tweet.java}  \newline
+This class is the object class for creating a tweet. This class is used in all the other classes to create tweet objects for all the suers tweets they have in their database. There is a constructor \texttt {Tweet(long id, ArrayList<String> hashTags, ArrayList<Double> geoLocation, String text, String dateTime)}, that has paramaters of user id, hashTags, geoLocation of tweets, the tweet itself, and the time the tweet was tweeted. There also is a no parameter tweet, \texttt {Tweet()}.  Then there is a method \texttt {setId(long id)}, that sets the user id in the tweet object. Another setter method that sets the geoLocation arraylist in the tweet object. This method is \texttt {setHashTags(ArrayList<String> hashTags)}. Then there are other setter methods, \texttt {setGeoLocation(ArrayList<Double> geoLocation)}, \texttt {setGeoLocation(String geoLocation)}, \texttt {setText(String text)}, and \texttt {setDateTime(String dateTime)} which set the geoLocation and tweet itself. Then there are getter methods for the tweet objects id , hashTags, geoLocation, and the tweet itself. These methods are\texttt {getId()}, \texttt {getHashTags()}, \texttt {getGeoLocation()}, \texttt {getText()}, \texttt {getDateTime()}. Then there is a method  \texttt{getStringifiedGeo()} that returns the String representation of the geoLocation. Finally, there is \texttt {hasGeo()}, which returns whether the tweet has a geoLocation and \texttt {toString()}, which simply returns a String representation of a tweet object. \newline\newline
+
+\end{adjustwidth}
+
+
+\subsection{test} \label{sec:archa}
+\begin{adjustwidth}{2em}{0pt}
+The test module is used to package together all of the test classes for TweetTrunk.\newline
+
+\noindent  \textit{AllTest.java} \newline
+This class is the test suite class where each test class pipes into for testing using JUnit. \newline
+
+\noindent \textit{ArchiveManagerTests.java} \newline
+This class simply tests each method in the ArchiveManager class. It tests whether the JSON file can be parsed correctly and and whether the users archive file path is a correct pate to a JSON file.\newline
+
+\noindent \textit{DBManagerTests.java}  \newline
+This class tests each method in the DBManger class. It tests whether the class can query correctly from the database and fetch new tweets correctly. \newline
+
+\noindent  \textit{ParametersTest.java} \newline
+This class tests each method in the Parameters class to make sure each method takes in and stores values currently in each variable. Essentialy, this class is testing to make sure the methods which JCommand works with are working correctly. \newline
+  
+\noindent  \textit{TweetsAnalyzerTests.java}  \newline
+This class tests the TweetsAnalyzer class. It has test cases for each method and checks to see whether the analysis methods are returning the correct data in response to their input. \newline
+
+\noindent \textit{TweetTests.java} \newline
+This class tests the Tweet class. It tests to make sure all of the getter and setter methods along with the constructor of this class work correctly. This class is important because the Tweet class is used as an object in many of the classes and needs to work consistently. \newline
+
+\end{adjustwidth}
+
+
+\section{Design Rationale} \label{sec:rationale}
+\begin{adjustwidth}{2em}{0pt}
+We decided to separate functionalities from each other. In other words, we separated test classes from authentication classes. Then each of those were separated from the database classes which were separate from the analysis classes. We did this so we would be able work on separate modules at different times. The module that relies most heavily on other modules is the ui module. This module is the module that interacts with the user and essentially calls the methods from all of the other classes.  
+\end{adjustwidth}
+\end{adjustwidth}
+
+
+\end{document}
+

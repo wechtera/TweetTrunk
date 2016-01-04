@@ -1,0 +1,31 @@
+graph ActivityGraph
+{
+	Start [shape=box,style=filled,color=".7 .3 1.0"]
+
+	Start -- "System Design"[label=1]
+
+	Start -- "Requirements Document"[label=2][color=red]
+
+	"System Design" -- "Requirements Document"[style=dotted]
+
+	"Requirements Document" -- "Util"[label=2]
+	"Requirements Document" -- "UI"[label=1]
+	"Requirements Document" -- "Test"[label=3]
+	"Requirements Document" -- "Web"[label=4]
+	"Requirements Document" -- "Core"[label=5][color=red]
+	
+	"Core" -- "Coverage Analysis"[label=1][color=red]
+
+	"Coverage Analysis" -- Debugging[label=1]
+
+	"Coverage Analysis" -- "Test Case Reconfig"[label=2][color=red]
+
+	Debugging -- "Test Case Reconfig"[style = dotted]
+
+	"Test Case Reconfig" -- "Preparation Of Deliverables"[label=1][color=red]
+
+	"Preparation Of Deliverables" -- Finish[label=0]
+	
+	Finish [shape=box,style=filled,color=".7 .3 1.0"]
+
+}
